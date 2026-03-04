@@ -1,0 +1,32 @@
+:root {
+  /* Primary Backgrounds */
+  --bg-deep-space: #0A0F1E;      /* Main background */
+  --bg-elevated: #141B2B;        /* Cards & sidebars */
+  --bg-higher: #1E2639;          /* Hover states, inputs */
+  
+  /* Accent Colors */
+  --accent-cyber-blue: #2B7FFF;   /* Primary actions, links */
+  --accent-success-green: #00C48C; /* Active, clocked in */
+  --accent-warning-orange: #FF8800; /* Paused, warnings */
+  --accent-alert-red: #FF3B5C;     /* Security alerts, errors */
+  
+  /* Role-based Borders */
+  --role-student: #2B7FFF;        /* Blue - Active Student */
+  --role-admin: #9D4EDD;           /* Purple - Student Admin */
+  --role-guest: #6B7280;           /* Gray - Guest */
+  --role-alumni: #10B981;           /* Green - Alumni */
+  
+  /* Text Colors */
+  --text-primary: #FFFFFF;
+  --text-secondary: #A0A8C0;
+  --text-tertiary: #6E7A94;
+  --text-on-accent: #FFFFFF;
+  
+  /* Borders & Dividers */
+  --border-subtle: #1E293B;
+  --border-focus: #2B7FFF;
+  
+  /* Security Zone (Undeletable Records) */
+  --security-glow: rgba(255, 59, 92, 0.15);
+  --security-border: #FF3B5C;
+}

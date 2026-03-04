@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation Hub · Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./static/css/color-pallee.css">
+    <link rel="stylesheet" href="./static/css/typography-scale.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0F1E;
+            color: #FFFFFF;
+            line-height: 1.5;
+            padding: 24px;
+            min-height: 100vh;
+        }
+
+        .dashboard {
+            max-width: 1440px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            gap: 24px;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #141B2B;
+            border-radius: 20px;
+            padding: 24px 16px;
+            height: fit-content;
+            border: 1px solid #1E293B;
+        }
+
+        .hub-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding: 0 8px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #2B7FFF, #9D4EDD);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 18px;
+            background: linear-gradient(135deg, #FFFFFF, #A0A8C0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-item {
+            background-color: #1E2639;
+            border-radius: 16px;
+            padding: 16px;
+            border-left: 4px solid #2B7FFF;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #6E7A94;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .stat-sub {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #2B7FFF;
+            margin-top: 4px;
+        }
+
+        .admin-on-duty {
+            background-color: #1E2639;
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid #9D4EDD;
+        }
+
+        .admin-header {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #9D4EDD;
+            letter-spacing: 0.04em;
+            margin-bottom: 12px;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            background: #9D4EDD;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .admin-info h4 {
+            font-size: 0.9375rem;
+            font-weight: 600;
+        }
+
+        .admin-info p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #9D4EDD;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #141B2B 0%, #1E2639 100%);
+            border-radius: 24px;
+            padding: 32px;
+            border: 1px solid #2B7FFF;
+            box-shadow: 0 8px 32px rgba(43, 127, 255, 0.15);
+        }
+
+        .welcome-message {
+            font-size: 0.875rem;
+            color: #2B7FFF;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, #FFFFFF, #A0A8C0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .clock-button {
+            background: #2B7FFF;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 600;
+            padding: 20px 40px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 20px rgba(43, 127, 255, 0.4);
+            width: fit-content;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .clock-button.active {
+            background: #00C48C;
+            box-shadow: 0 4px 20px rgba(0, 196, 140, 0.3);
+        }
+
+        .clock-button:active {
+            transform: scale(0.98);
+        }
+
+        .clock-button .status-text {
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        /* Projects Grid */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .section-header h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .view-all {
+            font-size: 0.875rem;
+            color: #2B7FFF;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .project-card {
+            background-color: #141B2B;
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid #1E293B;
+            transition: all 0.2s;
+        }
+
+        .project-card:hover {
+            border-color: #2B7FFF;
+            transform: translateY(-2px);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 8px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-student {
+            background: rgba(43, 127, 255, 0.15);
+            color: #2B7FFF;
+            border: 1px solid #2B7FFF;
+        }
+
+        .badge-admin {
+            background: rgba(157, 78, 221, 0.15);
+            color: #9D4EDD;
+            border: 1px solid #9D4EDD;
+        }
+
+        .badge-guest {
+            background: rgba(107, 114, 128, 0.15);
+            color: #6B7280;
+            border: 1px solid #6B7280;
+        }
+
+        .project-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .project-meta {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+            font-size: 0.75rem;
+            color: #6E7A94;
+        }
+
+        .github-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: #2B7FFF;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: #1E2639;
+            padding: 6px 10px;
+            border-radius: 30px;
+            width: fit-content;
+        }
+
+        .timeline-bar {
+            background: #1E2639;
+            height: 6px;
+            border-radius: 3px;
+            margin: 16px 0 8px;
+            overflow: hidden;
+        }
+
+        .timeline-progress {
+            height: 100%;
+            background: #00C48C;
+            border-radius: 3px;
+            width: 75%; /* Example progress */
+        }
+
+        .timeline-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.6875rem;
+            color: #6E7A94;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* Right Panel */
+        .right-panel {
+            background-color: #141B2B;
+            border-radius: 20px;
+            padding: 24px 16px;
+            border: 1px solid #1E293B;
+        }
+
+        .security-status {
+            background: rgba(255, 59, 92, 0.1);
+            border: 1px solid #FF3B5C;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 24px;
+        }
+
+        .security-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #FF3B5C;
+            letter-spacing: 0.04em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .security-badge {
+            background: #FF3B5C;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 30px;
+            font-size: 0.625rem;
+            font-weight: 700;
+        }
+
+        .audit-entry {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            padding: 12px 0;
+            border-bottom: 1px solid #1E293B;
+        }
+
+        .audit-entry:last-child {
+            border-bottom: none;
+        }
+
+        .audit-time {
+            color: #6E7A94;
+            margin-bottom: 4px;
+        }
+
+        .audit-action {
+            color: #FFFFFF;
+        }
+
+        .device-list {
+            margin-top: 24px;
+        }
+
+        .device-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: #1E2639;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+
+        .device-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .device-name {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .device-serial {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.6875rem;
+            color: #6E7A94;
+        }
+
+        .device-status {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 8px;
+            border-radius: 30px;
+        }
+
+        .status-available {
+            background: rgba(0, 196, 140, 0.15);
+            color: #00C48C;
+        }
+
+        .status-checkedout {
+            background: rgba(43, 127, 255, 0.15);
+            color: #2B7FFF;
+        }
+
+        .leaderboard-preview {
+            margin-top: 24px;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #1E293B;
+        }
+
+        .rank {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: #2B7FFF;
+            width: 24px;
+        }
+
+        .leaderboard-name {
+            flex: 1;
+            font-size: 0.875rem;
+        }
+
+        .leaderboard-points {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: #00C48C;
+        }
+
+        /* Session Summary Modal (Micro-interaction) */
+        .session-summary {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1E2639;
+            border-left: 4px solid #00C48C;
+            border-radius: 16px;
+            padding: 16px 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            animation: slideIn 0.3s ease;
+            max-width: 320px;
+        }
+
+        .summary-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #00C48C;
+            margin-bottom: 8px;
+        }
+
+        .summary-stats {
+            display: flex;
+            gap: 24px;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .summary-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .summary-label {
+            font-size: 0.625rem;
+            color: #6E7A94;
+        }
+
+        .summary-value {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Security Zone Glow */
+        .undeletable-section {
+            border: 1px solid #FF3B5C;
+            box-shadow: 0 0 20px rgba(255, 59, 92, 0.15);
+            border-radius: 16px;
+            padding: 16px;
+            margin-top: 24px;
+            background: rgba(255, 59, 92, 0.02);
+        }
+
+        .undeletable-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #FF3B5C;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Left Sidebar - Stats & Admin -->
+        <aside class="sidebar">
+            <div class="hub-logo">
+                <div class="logo-icon">⚡</div>
+                <div class="logo-text">innovation.hub</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">Currently in Hub</div>
+                    <div class="stat-value">24</div>
+                    <div class="stat-sub">↑ 8 since 2pm</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">Devices in Use</div>
+                    <div class="stat-value">18/24</div>
+                    <div class="stat-sub">8 donated · 10 personal</div>
+                </div>
+            </div>
+
+            <div class="admin-on-duty">
+                <div class="admin-header">Admin on duty</div>
+                <div class="admin-profile">
+                    <div class="admin-avatar">JD</div>
+                    <div class="admin-info">
+                        <h4>Jessie Du</h4>
+                        <p>@jessie.admin · Student Admin</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick device registry -->
+            <div style="margin-top: 24px;">
+                <div style="font-size:0.75rem; color:#6E7A94; margin-bottom:12px;">REGISTERED DEVICES</div>
+                <div style="display:flex; flex-direction:column; gap:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; background:#1E2639; border-radius:12px;">
+                        <span style="font-family:'JetBrains Mono'; font-size:0.75rem;">PC-DON-023</span>
+                        <span style="color:#00C48C; font-size:0.75rem;">• CHECKED OUT</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding:8px; background:#1E2639; border-radius:12px;">
+                        <span style="font-family:'JetBrains Mono'; font-size:0.75rem;">PC-DON-024</span>
+                        <span style="color:#2B7FFF; font-size:0.75rem;">• AVAILABLE</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Hero Section with Clock Button -->
+            <section class="hero-section">
+                <div class="welcome-message">WELCOME BACK, ALEX</div>
+                <h1 class="hero-title">Ready to build something?</h1>
+                <button class="clock-button" onclick="this.classList.toggle('active'); this.innerHTML = this.classList.contains('active') ? '<span class=\'status-text\'>ACTIVE SESSION</span> ⏸️ Pause' : '<span class=\'status-text\'>START SESSION</span> ⏵ Clock In'">
+                    <span class="status-text">START SESSION</span> ⏵ Clock In
+                </button>
+            </section>
+
+            <!-- Active Projects -->
+            <div>
+                <div class="section-header">
+                    <h2>Active Projects</h2>
+                    <a href="#" class="view-all">View all →</a>
+                </div>
+
+                <div class="projects-grid">
+                    <!-- Project Card 1 - Student -->
+                    <div class="project-card">
+                        <div class="project-header">
+                            <span class="user-badge badge-student">👤 STUDENT</span>
+                            <span class="text-timestamp">active 2h ago</span>
+                        </div>
+                        <h3 class="project-title">ML Model Training Pipeline</h3>
+                        <div class="project-meta">
+                            <span>⏱️ Due 12/15</span>
+                            <span>⭐ 4 milestones</span>
+                        </div>
+                        <a href="#" class="github-link">
+                            <span>📦</span> github.com/alex/ml-pipeline
+                        </a>
+                        <div class="timeline-bar">
+                            <div class="timeline-progress" style="width: 60%;"></div>
+                        </div>
+                        <div class="timeline-labels">
+                            <span>Start: Oct 1</span>
+                            <span>60% complete</span>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 2 - Admin -->
+                    <div class="project-card">
+                        <div class="project-header">
+                            <span class="user-badge badge-admin">⚡ STUDENT ADMIN</span>
+                            <span class="text-timestamp">just now</span>
+                        </div>
+                        <h3 class="project-title">Hub Dashboard UI</h3>
+                        <div class="project-meta">
+                            <span>⏱️ Due 11/30</span>
+                            <span>⭐ 8 milestones</span>
+                        </div>
+                        <a href="#" class="github-link">
+                            <span>📦</span> github.com/jessie/hub-ui
+                        </a>
+                        <div class="timeline-bar">
+                            <div class="timeline-progress" style="width: 90%;"></div>
+                        </div>
+                        <div class="timeline-labels">
+                            <span>Start: Nov 1</span>
+                            <span>90% complete</span>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 3 - Guest -->
+                    <div class="project-card">
+                        <div class="project-header">
+                            <span class="user-badge badge-guest">🤝 GUEST</span>
+                            <span class="text-timestamp">yesterday</span>
+                        </div>
+                        <h3 class="project-title">Workshop: Intro to Docker</h3>
+                        <div class="project-meta">
+                            <span>⏱️ One-time</span>
+                            <span>👥 12 attendees</span>
+                        </div>
+                        <a href="#" class="github-link">
+                            <span>📎</span> slides.com/guest/docker-workshop
+                        </a>
+                        <div class="timeline-bar">
+                            <div class="timeline-progress" style="width: 100%; background:#9D4EDD;"></div>
+                        </div>
+                        <div class="timeline-labels">
+                            <span>Completed</span>
+                            <span>🎉 Done</span>
+                        </div>
+                    </div>
+
+                    <!-- Project Card 4 - Alumni -->
+                    <div class="project-card">
+                        <div class="project-header">
+                            <span class="user-badge" style="background:rgba(16,185,129,0.15); color:#10B981; border-color:#10B981;">🎓 ALUMNI</span>
+                            <span class="text-timestamp">3 days ago</span>
+                        </div>
+                        <h3 class="project-title">Open Source Contribution</h3>
+                        <div class="project-meta">
+                            <span>⏱️ Ongoing</span>
+                            <span>🔧 23 commits</span>
+                        </div>
+                        <a href="#" class="github-link">
+                            <span>📦</span> github.com/sarah/django-ext
+                        </a>
+                        <div class="timeline-bar">
+                            <div class="timeline-progress" style="width: 45%; background:#10B981;"></div>
+                        </div>
+                        <div class="timeline-labels">
+                            <span>Mentoring 2 students</span>
+                            <span>45%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Panel - Security, Devices, Leaderboard -->
+        <aside class="right-panel">
+            <!-- Security Zone -->
+            <div class="security-status">
+                <div class="security-title">
+                    <span>🛡️ SECURITY ZONE</span>
+                    <span class="security-badge">LIVE</span>
+                </div>
+                <div class="audit-entry">
+                    <div class="audit-time">14:32:21</div>
+                    <div class="audit-action">DEVICE CHECKOUT · PC-DON-023 (Alex S.)</div>
+                </div>
+                <div class="audit-entry">
+                    <div class="audit-time">14:28:03</div>
+                    <div class="audit-action">LOCKDOWN DRILL · Activated by Admin</div>
+                </div>
+                <div class="audit-entry">
+                    <div class="audit-time">14:15:47</div>
+                    <div class="audit-action">USER VERIFIED · Guest #G2023 (Sarah K.)</div>
+                </div>
+                <div style="margin-top:12px;">
+                    <span style="font-size:0.75rem; color:#FF3B5C;">⚠️ 3 undeletable records today</span>
+                </div>
+            </div>
+
+            <!-- Live Device Status -->
+            <div class="device-list">
+                <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+                    <h3 style="font-size:0.9375rem;">Live Device Status</h3>
+                    <span style="font-size:0.75rem; color:#2B7FFF;">6 active</span>
+                </div>
+                <div class="device-item">
+                    <div class="device-info">
+                        <span class="device-name">PC-DON-023</span>
+                        <span class="device-serial">SN: XC93H-2A4F</span>
+                    </div>
+                    <span class="device-status status-checkedout">CHECKED OUT</span>
+                </div>
+                <div class="device-item">
+                    <div class="device-info">
+                        <span class="device-name">PC-DON-024</span>
+                        <span class="device-serial">SN: YT82J-9B7K</span>
+                    </div>
+                    <span class="device-status status-available">AVAILABLE</span>
+                </div>
+                <div class="device-item">
+                    <div class="device-info">
+                        <span class="device-name">PC-PRS-001</span>
+                        <span class="device-serial">Personal · @jessie</span>
+                    </div>
+                    <span class="device-status status-checkedout">ACTIVE</span>
+                </div>
+            </div>
+
+            <!-- Leaderboard Preview -->
+            <div class="leaderboard-preview">
+                <div style="display:flex; justify-content:space-between; margin-bottom:16px;">
+                    <h3 style="font-size:0.9375rem;">🏆 Innovation Leaders</h3>
+                    <span style="font-size:0.75rem; color:#00C48C;">This week</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="rank">#1</span>
+                    <span class="leaderboard-name">Alex S.</span>
+                    <span class="leaderboard-points">2,450 pts</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="rank">#2</span>
+                    <span class="leaderboard-name">Jessie D.</span>
+                    <span class="leaderboard-points">2,132 pts</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="rank">#3</span>
+                    <span class="leaderboard-name">Marcus W.</span>
+                    <span class="leaderboard-points">1,876 pts</span>
+                </div>
+                <div class="leaderboard-item">
+                    <span class="rank">#4</span>
+                    <span class="leaderboard-name">Priya K.</span>
+                    <span class="leaderboard-points">1,654 pts</span>
+                </div>
+                <div style="margin-top:16px;">
+                    <span style="font-size:0.75rem; color:#6E7A94;">🔥 Most commits: 47 this week</span>
+                </div>
+            </div>
+
+            <!-- Undeletable Records Section (Admin Only) -->
+            <div class="undeletable-section">
+                <div class="undeletable-header">
+                    <span>🔒 UNDELETABLE RECORDS</span>
+                    <span style="font-size:0.625rem; background:#FF3B5C; padding:2px 6px; border-radius:30px;">ADMIN</span>
+                </div>
+                <div style="font-family:'JetBrains Mono'; font-size:0.6875rem; color:#A0A8C0;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                        <span>2024-11-15 14:32</span>
+                        <span style="color:#FF3B5C;">⛔ LOCKED</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                        <span>2024-11-15 13:17</span>
+                        <span style="color:#FF3B5C;">⛔ LOCKED</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Session Summary Micro-interaction (Shown after clock-out) -->
+        <div class="session-summary" style="display: none;" id="sessionSummary">
+            <div class="summary-title">SESSION COMPLETE</div>
+            <div class="summary-stats">
+                <div class="summary-stat">
+                    <span class="summary-label">ACTIVE</span>
+                    <span class="summary-value">3h 20m</span>
+                </div>
+                <div class="summary-stat">
+                    <span class="summary-label">PAUSED</span>
+                    <span class="summary-value">24m</span>
+                </div>
+                <div class="summary-stat">
+                    <span class="summary-label">DEVICE</span>
+                    <span class="summary-value">PC-04</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle session summary demo
+        document.querySelector('.clock-button').addEventListener('click', function(e) {
+            if (!this.classList.contains('active')) {
+                // Clock out - show summary
+                document.getElementById('sessionSummary').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('sessionSummary').style.display = 'none';
+                }, 4000);
+            }
+        });
+    </script>
+</body>
+</html>
