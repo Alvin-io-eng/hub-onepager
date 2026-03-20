@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Innovation Hub · Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.metrics-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.main-grid { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+.left-col { display: flex; flex-direction: column; gap: 24px; }
+.right-col { display: flex; flex-direction: column; gap: 24px; }
+
+.clock-hero {
+  background: linear-gradient(135deg, #141B2B, #1a2340);
+  border: 1px solid var(--accent);
+  border-radius: 20px; padding: 32px;
+  box-shadow: 0 0 40px rgba(43,127,255,0.08);
+  position: relative; overflow: hidden;
+}
+.clock-hero::before {
+  content:''; position:absolute; top:-40%; right:-20%;
+  width:400px; height:400px; border-radius:50%;
+  background: radial-gradient(circle, rgba(43,127,255,0.08) 0%, transparent 70%);
+}
+[data-theme="light"] .clock-hero {
+  background: linear-gradient(135deg, #EEF4FF, #F0F6FF);
+  border-color: var(--accent);
+}
+.clock-timer {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 3.5rem; font-weight: 700;
+  color: var(--accent); letter-spacing: -0.02em; line-height: 1;
+  margin: 16px 0;
+}
+.clock-meta { font-size: 13px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+
+.device-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.device-row:last-child { border-bottom: none; }
+.device-id { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--accent); font-weight: 600; }
+.device-user { font-size: 13px; color: var(--text-dim); }
+
+.security-log { display: flex; flex-direction: column; gap: 0; }
+.log-row {
+  display: flex; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.log-row:last-child { border-bottom: none; }
+.log-time { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-muted); white-space: nowrap; padding-top: 2px; }
+.log-action { font-size: 13px; color: var(--text-dim); flex:1; }
+.log-action strong { color: var(--text); font-weight: 600; }
+
+.project-mini { padding: 16px 0; border-bottom: 1px solid var(--border); }
+.project-mini:last-child { border-bottom: none; }
+.project-mini-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.project-mini-name { font-size: 14px; font-weight: 700; color: var(--text); }
+.project-mini-due { font-size: 11px; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+
+.leaderboard-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.leaderboard-row:last-child { border-bottom: none; }
+.rank-num { font-size: 20px; font-weight: 800; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; min-width: 28px; }
+.rank-num.gold { color: #F59E0B; }
+.rank-num.silver { color: #94A3B8; }
+.rank-num.bronze { color: #B45309; }
+.rank-name { flex: 1; font-size: 14px; font-weight: 600; color: var(--text); }
+.rank-pts { font-size: 13px; font-weight: 700; color: var(--accent); font-family: 'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">HUB</div>
+      <span class="sidebar-logo-text">Innovation <span>Hub</span></span>
+    </a>
+
+    <div class="sidebar-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item active"><span class="nav-icon">⚡</span> Dashboard</a>
+    <a href="members.html" class="nav-item"><span class="nav-icon">👥</span> Members <span class="nav-badge">24</span></a>
+    <a href="devices.html" class="nav-item"><span class="nav-icon">💻</span> Device Registry</a>
+    <a href="projects.html" class="nav-item"><span class="nav-icon">🚀</span> Projects</a>
+
+    <div class="sidebar-section-label">Admin</div>
+    <a href="security.html" class="nav-item"><span class="nav-icon">🛡️</span> Security Logs <span class="nav-badge" style="background:var(--danger);">3</span></a>
+
+    <div class="sidebar-footer">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:11px;color:var(--text-muted);">Appearance</span>
+        <button class="theme-toggle" onclick="toggleTheme()"><span class="theme-icon">☀️</span></button>
+      </div>
+      <a href="profile.html" class="user-widget">
+        <div class="user-avatar" style="background:linear-gradient(135deg,var(--accent),var(--accent2));">UA</div>
+        <div class="user-info">
+          <div class="user-name">Unified Admin</div>
+          <div class="user-role">root@hub</div>
+        </div>
+        <span style="font-size:16px;color:var(--text-muted);">⚙️</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- PAGE CONTENT -->
+  <div class="page-content">
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" placeholder="Search members, devices, projects...">
+      </div>
+      <div style="margin-left:auto;display:flex;gap:10px;align-items:center;">
+        <div style="position:relative;">
+          <button class="btn btn-ghost btn-icon">🔔</button>
+          <span class="notif-dot"></span>
+        </div>
+        <span class="badge badge-green" style="gap:6px;"><span class="pulse-dot green"></span> Hub Live</span>
+      </div>
+    </div>
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+      <div>
+        <h1 class="page-title animate-in">Research Hub Overview</h1>
+        <p class="page-subtitle animate-in delay-1">Welcome back, Leader. Friday, March 20 · 12 computers active.</p>
+      </div>
+      <div class="animate-in delay-2" style="display:flex;gap:12px;">
+        <button class="btn btn-ghost" onclick="document.getElementById('addModal').classList.add('open')">+ Announce</button>
+        <button class="btn btn-success" onclick="toggleClock()" id="clockBtn">▶ Clock In Session</button>
+      </div>
+    </div>
+
+    <div class="page-body">
+
+      <!-- METRICS -->
+      <div class="metrics-grid animate-in delay-1" style="margin-bottom:28px;">
+        <div class="metric-card metric-accent-blue">
+          <div class="metric-label">Active Users</div>
+          <div class="metric-value">24</div>
+          <div class="metric-sub">+3 guests today</div>
+        </div>
+        <div class="metric-card metric-accent-purple">
+          <div class="metric-label">Devices Online</div>
+          <div class="metric-value">18<span style="font-size:1.2rem;color:var(--text-muted)">/20</span></div>
+          <div class="metric-sub">2 idle</div>
+        </div>
+        <div class="metric-card metric-accent-green">
+          <div class="metric-label">Active Projects</div>
+          <div class="metric-value">12</div>
+          <div class="metric-sub">4 near deadline</div>
+        </div>
+        <div class="metric-card metric-accent-red">
+          <div class="metric-label">Security Flags</div>
+          <div class="metric-value">3</div>
+          <div class="metric-sub">Undeletable records</div>
+        </div>
+      </div>
+
+      <div class="main-grid">
+        <div class="left-col">
+
+          <!-- CLOCK CARD -->
+          <div class="clock-hero animate-in delay-2">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div style="font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px;">Session Timer</div>
+                <div class="clock-timer" id="timer">00:00:00</div>
+                <div class="clock-meta" id="clockStatus">Not clocked in · PC-04 ready</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px;font-family:'JetBrains Mono',monospace;">TODAY'S LOG</div>
+                <div style="font-size:22px;font-weight:800;color:var(--text);">3h 20m</div>
+                <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">of 8h target</div>
+              </div>
+            </div>
+            <div class="progress-bar" style="margin:20px 0 8px;">
+              <div class="progress-fill" style="width:41%;background:var(--success);"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;">
+              <span>3h 20m active · 24m paused</span>
+              <span>41% complete</span>
+            </div>
+          </div>
+
+          <!-- DEVICE TABLE -->
+          <div class="card animate-in delay-3">
+            <div class="section-header">
+              <div class="section-title-sm">💻 Donated Hardware Logs</div>
+              <span class="badge badge-blue">Live Feed</span>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Device ID</th>
+                  <th>Assigned To</th>
+                  <th>Type</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="mono" style="color:var(--accent);font-size:13px;">HUB-PC-001</span></td>
+                  <td>John Doe <span class="badge badge-blue" style="margin-left:6px;">Student</span></td>
+                  <td><span class="badge badge-gray">Donated</span></td>
+                  <td><span style="display:flex;align-items:center;gap:6px;"><span class="pulse-dot green"></span> Occupied</span></td>
+                </tr>
+                <tr>
+                  <td><span class="mono" style="color:var(--accent);font-size:13px;">HUB-PC-002</span></td>
+                  <td style="color:var(--text-muted);">Available</td>
+                  <td><span class="badge badge-gray">Donated</span></td>
+                  <td><span style="display:flex;align-items:center;gap:6px;"><span class="pulse-dot gray"></span> Idle</span></td>
+                </tr>
+                <tr>
+                  <td><span class="mono" style="color:var(--accent);font-size:13px;">HUB-PC-003</span></td>
+                  <td>Jane Smith <span class="badge badge-purple" style="margin-left:6px;">Alumni</span></td>
+                  <td><span class="badge badge-gray">Donated</span></td>
+                  <td><span style="display:flex;align-items:center;gap:6px;"><span class="pulse-dot green"></span> Occupied</span></td>
+                </tr>
+                <tr>
+                  <td><span class="mono" style="color:var(--accent);font-size:13px;">HUB-PC-004</span></td>
+                  <td style="color:var(--text-muted);">Available</td>
+                  <td><span class="badge badge-gray">Donated</span></td>
+                  <td><span style="display:flex;align-items:center;gap:6px;"><span class="pulse-dot amber"></span> Maintenance</span></td>
+                </tr>
+              </tbody>
+            </table>
+            <div style="margin-top:16px;">
+              <a href="devices.html" class="btn btn-ghost btn-sm">View All Devices →</a>
+            </div>
+          </div>
+
+          <!-- PROJECTS -->
+          <div class="card animate-in delay-4">
+            <div class="section-header">
+              <div class="section-title-sm">🚀 Active Projects</div>
+              <a href="projects.html" class="btn btn-ghost btn-sm">+ New Project</a>
+            </div>
+            <div class="project-mini">
+              <div class="project-mini-header">
+                <div>
+                  <div class="project-mini-name">Solar Tracker IoT</div>
+                  <div style="margin-top:4px;display:flex;gap:6px;">
+                    <span class="badge badge-blue">Research</span>
+                    <span class="badge badge-purple">Hardware</span>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="project-mini-due">Due Oct 12</div>
+                  <div style="font-size:11px;color:var(--accent);font-family:'JetBrains Mono',monospace;margin-top:2px;">65%</div>
+                </div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:65%"></div></div>
+            </div>
+            <div class="project-mini">
+              <div class="project-mini-header">
+                <div>
+                  <div class="project-mini-name">Hub Dashboard UI</div>
+                  <div style="margin-top:4px;display:flex;gap:6px;">
+                    <span class="badge badge-green">Dev</span>
+                    <span class="badge badge-gray">Web</span>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="project-mini-due">Due Nov 30</div>
+                  <div style="font-size:11px;color:var(--success);font-family:'JetBrains Mono',monospace;margin-top:2px;">90%</div>
+                </div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill green" style="width:90%"></div></div>
+            </div>
+            <div class="project-mini">
+              <div class="project-mini-header">
+                <div>
+                  <div class="project-mini-name">Open Source Contribution</div>
+                  <div style="margin-top:4px;display:flex;gap:6px;">
+                    <span class="badge badge-amber">Ongoing</span>
+                  </div>
+                </div>
+                <div style="text-align:right;">
+                  <div class="project-mini-due">No deadline</div>
+                  <div style="font-size:11px;color:var(--warning);font-family:'JetBrains Mono',monospace;margin-top:2px;">45%</div>
+                </div>
+              </div>
+              <div class="progress-bar"><div class="progress-fill" style="width:45%;background:var(--warning)"></div></div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT COL -->
+        <div class="right-col">
+
+          <!-- SECURITY -->
+          <div class="card animate-in delay-2" style="border-top:3px solid var(--danger);">
+            <div class="section-header">
+              <div class="section-title-sm">🛡️ Security Zone</div>
+              <span class="badge badge-red">LIVE</span>
+            </div>
+            <div class="security-log">
+              <div class="log-row">
+                <div class="log-time">14:32:21</div>
+                <div class="log-action"><strong>DEVICE CHECKOUT</strong> · PC-DON-023 (Alex S.)</div>
+              </div>
+              <div class="log-row">
+                <div class="log-time">14:28:03</div>
+                <div class="log-action"><strong>LOCKDOWN DRILL</strong> · Activated by Admin</div>
+              </div>
+              <div class="log-row">
+                <div class="log-time">14:15:47</div>
+                <div class="log-action"><strong>USER VERIFIED</strong> · Guest #G2023 (Sarah K.)</div>
+              </div>
+              <div class="log-row">
+                <div class="log-time">13:55:09</div>
+                <div class="log-action"><strong>LOGIN</strong> · john.doe@hub.ac (Student)</div>
+              </div>
+            </div>
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+              <span style="font-size:12px;color:var(--danger);font-family:'JetBrains Mono',monospace;">⚠ 3 undeletable records</span>
+              <a href="security.html" class="btn btn-ghost btn-sm">View All</a>
+            </div>
+          </div>
+
+          <!-- LEADERBOARD -->
+          <div class="card animate-in delay-3">
+            <div class="section-header">
+              <div class="section-title-sm">🏆 Innovation Leaders</div>
+              <span style="font-size:11px;color:var(--success);font-family:'JetBrains Mono',monospace;">This Week</span>
+            </div>
+            <div class="leaderboard-row">
+              <div class="rank-num gold">#1</div>
+              <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#F59E0B,#D97706);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;">AS</div>
+              <div class="rank-name">Alex S.</div>
+              <div class="rank-pts">2,450</div>
+            </div>
+            <div class="leaderboard-row">
+              <div class="rank-num silver">#2</div>
+              <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;">JD</div>
+              <div class="rank-name">Jessie D.</div>
+              <div class="rank-pts">2,132</div>
+            </div>
+            <div class="leaderboard-row">
+              <div class="rank-num bronze">#3</div>
+              <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#10B981,#059669);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;">MW</div>
+              <div class="rank-name">Marcus W.</div>
+              <div class="rank-pts">1,876</div>
+            </div>
+            <div class="leaderboard-row">
+              <div class="rank-num">#4</div>
+              <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#EC4899,#BE185D);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;">PK</div>
+              <div class="rank-name">Priya K.</div>
+              <div class="rank-pts">1,654</div>
+            </div>
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);">
+              <span style="font-size:12px;color:var(--text-muted);">🔥 Most commits: <strong style="color:var(--text);">47</strong> this week</span>
+            </div>
+          </div>
+
+          <!-- UNDELETABLE RECORDS -->
+          <div class="card animate-in delay-4" style="border:1px solid rgba(255,59,92,0.3);">
+            <div class="section-header">
+              <div class="section-title-sm" style="color:var(--danger);">🔒 Locked Records</div>
+              <span class="badge badge-red">ADMIN</span>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted);">
+              <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+                <span>2025-03-20 14:32</span><span style="color:var(--danger);">⛔ LOCKED</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);">
+                <span>2025-03-20 13:17</span><span style="color:var(--danger);">⛔ LOCKED</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;padding:8px 0;">
+                <span>2025-03-20 11:05</span><span style="color:var(--danger);">⛔ LOCKED</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="addModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📢 New Announcement</div>
+      <button class="modal-close" onclick="document.getElementById('addModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Title</label>
+      <input class="form-input" type="text" placeholder="e.g. Hub closes early today">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Message</label>
+      <textarea class="form-input" rows="4" placeholder="Write your announcement..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Priority</label>
+      <select class="form-input">
+        <option>Normal</option><option>Important</option><option>Urgent</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:8px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="document.getElementById('addModal').classList.remove('open')">Post Announcement</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('addModal').classList.remove('open')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+let isClockedIn = false, seconds = 0, timerInterval;
+function toggleClock() {
+  const btn = document.getElementById('clockBtn');
+  const timerEl = document.getElementById('timer');
+  const statusEl = document.getElementById('clockStatus');
+  isClockedIn = !isClockedIn;
+  if (isClockedIn) {
+    btn.textContent = '⏸ Pause (Lunch)';
+    btn.className = 'btn btn-sm';
+    btn.style.background = 'var(--warning)'; btn.style.color='#fff';
+    statusEl.textContent = 'Session active · PC-04 assigned';
+    timerInterval = setInterval(() => {
+      seconds++;
+      timerEl.textContent = [Math.floor(seconds/3600),Math.floor((seconds%3600)/60),seconds%60].map(n=>String(n).padStart(2,'0')).join(':');
+    }, 1000);
+  } else {
+    btn.textContent = '▶ Resume Session';
+    btn.className = 'btn btn-sm';
+    btn.style.background = 'var(--accent)'; btn.style.color='#fff';
+    statusEl.textContent = 'Session paused';
+    clearInterval(timerInterval);
+  }
+}
+</script>
+</body>
+</html>

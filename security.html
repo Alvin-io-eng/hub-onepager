@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Innovation Hub · Security Logs</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.log-entry {
+  display:flex;align-items:flex-start;gap:16px;
+  padding:16px 0;border-bottom:1px solid var(--border);
+}
+.log-entry:last-child { border-bottom:none; }
+.log-type-icon {
+  width:38px;height:38px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;margin-top:2px;
+}
+.log-body { flex:1;min-width:0; }
+.log-action { font-size:14px;font-weight:700;color:var(--text);margin-bottom:4px; }
+.log-detail { font-size:12px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+.log-meta { display:flex;gap:8px;align-items:center;margin-top:6px; }
+.log-right { text-align:right;flex-shrink:0; }
+.log-time { font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted); }
+.log-locked { font-size:11px;color:var(--danger);font-family:'JetBrains Mono',monospace;margin-top:4px; }
+
+.lock-entry {
+  display:flex;align-items:center;gap:16px;
+  padding:14px 16px;
+  background:rgba(255,59,92,0.04);border:1px solid rgba(255,59,92,0.15);
+  border-radius:12px;margin-bottom:10px;
+}
+.lock-entry:last-child { margin-bottom:0; }
+.lock-timestamp { font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text-muted); }
+.lock-action { flex:1;font-size:13px;color:var(--text); }
+.lock-badge { font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--danger);display:flex;align-items:center;gap:4px; }
+
+.security-panel { display:grid;grid-template-columns:1fr 320px;gap:24px; }
+.log-filters { display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px; }
+.log-filter { padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);cursor:pointer;transition:all 0.2s; }
+.log-filter.active { background:rgba(43,127,255,0.1);border-color:var(--accent);color:var(--accent); }
+
+.threat-level { padding:20px;border-radius:14px;text-align:center;margin-bottom:20px; }
+.threat-level.low { background:rgba(0,196,140,0.06);border:1px solid rgba(0,196,140,0.2); }
+.threat-level.medium { background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.2); }
+.threat-level-label { font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;font-family:'JetBrains Mono',monospace; }
+.threat-level-val { font-size:28px;font-weight:800; }
+</style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-logo"><div class="sidebar-logo-icon">HUB</div><span class="sidebar-logo-text">Innovation <span>Hub</span></span></a>
+    <div class="sidebar-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item"><span class="nav-icon">⚡</span> Dashboard</a>
+    <a href="members.html" class="nav-item"><span class="nav-icon">👥</span> Members</a>
+    <a href="devices.html" class="nav-item"><span class="nav-icon">💻</span> Device Registry</a>
+    <a href="projects.html" class="nav-item"><span class="nav-icon">🚀</span> Projects</a>
+    <div class="sidebar-section-label">Admin</div>
+    <a href="security.html" class="nav-item active"><span class="nav-icon">🛡️</span> Security Logs <span class="nav-badge" style="background:var(--danger);">3</span></a>
+    <div class="sidebar-footer">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:11px;color:var(--text-muted);">Appearance</span>
+        <button class="theme-toggle" onclick="toggleTheme()"><span class="theme-icon">☀️</span></button>
+      </div>
+      <a href="profile.html" class="user-widget">
+        <div class="user-avatar" style="background:linear-gradient(135deg,var(--accent),var(--accent2));">UA</div>
+        <div class="user-info"><div class="user-name">Unified Admin</div><div class="user-role">root@hub</div></div>
+        <span style="font-size:16px;color:var(--text-muted);">⚙️</span>
+      </a>
+    </div>
+  </aside>
+
+  <div class="page-content">
+    <div class="top-bar">
+      <div class="search-box"><span>🔍</span><input type="text" placeholder="Search logs..."></div>
+      <div style="margin-left:auto;display:flex;gap:10px;">
+        <button class="btn btn-ghost btn-sm">📥 Export Logs</button>
+        <button class="btn btn-ghost btn-sm">🔒 Lockdown Mode</button>
+        <span class="badge badge-red" style="gap:6px;"><span class="pulse-dot red"></span> Monitoring Live</span>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1 class="page-title animate-in">Security Logs</h1>
+        <p class="page-subtitle animate-in delay-1">Tamper-proof audit trail · All records are immutable</p>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <div class="alert alert-warning animate-in" style="margin-bottom:24px;">
+        <span>⚠️</span>
+        <span><strong>Admin Notice:</strong> 3 undeletable records flagged today. All log entries are cryptographically signed and cannot be modified or removed.</span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;" class="animate-in delay-1">
+        <div class="metric-card metric-accent-red"><div class="metric-label">Flags Today</div><div class="metric-value">3</div><div class="metric-sub">undeletable records</div></div>
+        <div class="metric-card metric-accent-blue"><div class="metric-label">Events Today</div><div class="metric-value">47</div><div class="metric-sub">logged actions</div></div>
+        <div class="metric-card metric-accent-green"><div class="metric-label">Logins</div><div class="metric-value">18</div><div class="metric-sub">successful auth</div></div>
+        <div class="metric-card metric-accent-amber"><div class="metric-label">Checkouts</div><div class="metric-value">9</div><div class="metric-sub">device events</div></div>
+      </div>
+
+      <div class="security-panel animate-in delay-2">
+        <!-- MAIN LOG -->
+        <div>
+          <div class="log-filters">
+            <div class="log-filter active" onclick="setLogFilter('all',this)">All Events</div>
+            <div class="log-filter" onclick="setLogFilter('login',this)">🔐 Logins</div>
+            <div class="log-filter" onclick="setLogFilter('device',this)">💻 Devices</div>
+            <div class="log-filter" onclick="setLogFilter('admin',this)">⚡ Admin</div>
+            <div class="log-filter" onclick="setLogFilter('locked',this)">🔒 Locked</div>
+          </div>
+
+          <div class="card" style="padding:24px;">
+            <div id="logEntries">
+
+              <div class="log-entry" data-type="admin locked">
+                <div class="log-type-icon" style="background:rgba(255,59,92,0.1);">🔒</div>
+                <div class="log-body">
+                  <div class="log-action">DEVICE CHECKOUT · PC-DON-023</div>
+                  <div class="log-detail">Actor: Alex S. (student) · Device: HUB-PC-023 · SN: XC93H-2A4F</div>
+                  <div class="log-meta">
+                    <span class="badge badge-red">Locked Record</span>
+                    <span class="badge badge-gray">Device Event</span>
+                  </div>
+                </div>
+                <div class="log-right">
+                  <div class="log-time">14:32:21</div>
+                  <div class="log-locked">⛔ UNDELETABLE</div>
+                </div>
+              </div>
+
+              <div class="log-entry" data-type="admin locked">
+                <div class="log-type-icon" style="background:rgba(255,59,92,0.1);">🚨</div>
+                <div class="log-body">
+                  <div class="log-action">LOCKDOWN DRILL · Activated</div>
+                  <div class="log-detail">Actor: Unified Admin (root) · Duration: 5 min · Cleared at 14:33</div>
+                  <div class="log-meta">
+                    <span class="badge badge-red">Locked Record</span>
+                    <span class="badge badge-blue">Admin Action</span>
+                  </div>
+                </div>
+                <div class="log-right">
+                  <div class="log-time">14:28:03</div>
+                  <div class="log-locked">⛔ UNDELETABLE</div>
+                </div>
+              </div>
+
+              <div class="log-entry" data-type="login">
+                <div class="log-type-icon" style="background:rgba(0,196,140,0.1);">✅</div>
+                <div class="log-body">
+                  <div class="log-action">USER VERIFIED · Guest Access</div>
+                  <div class="log-detail">Actor: Admin · Verified: Guest #G2023 (Sarah K.) · IP: 192.168.1.42</div>
+                  <div class="log-meta">
+                    <span class="badge badge-green">Verified</span>
+                    <span class="badge badge-gray">Auth Event</span>
+                  </div>
+                </div>
+                <div class="log-right">
+                  <div class="log-time">14:15:47</div>
+                </div>
+              </div>
+
+              <div class="log-entry" data-type="login locked">
+                <div class="log-type-icon" style="background:rgba(255,59,92,0.1);">🔑</div>
+                <div class="log-body">
+                  <div class="log-action">LOGIN · john.doe@hub.ac</div>
+                  <div class="log-detail">Role: Student · Device: HUB-PC-001 · IP: 192.168.1.31</div>
+                  <div class="log-meta">
+                    <span class="badge badge-red">Locked Record</span>
+                    <span class="badge badge-blue">Login</span>
+                  </div>
+                </div>
+                <div class="log-right">
+                  <div class="log-time">13:55:09</div>
+                  <div class="log-locked">⛔ UNDELETABLE</div>
+                </div>
+              </div>
+
+              <div class="log-entry" data-type="device">
+                <div class="log-type-icon" style="background:rgba(43,127,255,0.1);">💻</div>
+                <div class="log-body">
+                  <div class="log-action">DEVICE CHECK-IN · HUB-PC-002</div>
+                  <div class="log-detail">Returned by: Marcus W. · Session: 3h 40m · Condition: Good</div>
+                  <div class="log-meta">
+                    <span class="badge badge-green">Returned</span>
+                    <span class="badge badge-gray">Device Event</span>
+                  </div>
+                </div>
+                <div class="log-right">
+                  <div class="log-time">13:22:44</div>
+                </div>
+              </div>
+
+              <div class="log-entry" data-type="device">
+                <div class="log-type-icon" style="background:rgba(245,158,11,0.1);">⚠️</div>
+                <div class="log-body">
+                  <div class="log-action">MAINTENANCE FLAG · HUB-PC-004</div>
+                  <div class="log-detail">Reported by: Unified Admin · Issue: Faulty USB port · Status: In service</div>
+                  <div class="log-meta">
+                    <span class="badge badge-amber">Maintenance</span>
+                    <span class="badge badge-gray">Device Event</span>
+                  </div>
+                </div>
+                <div class="log-right">
+                  <div class="log-time">12:08:16</div>
+                </div>
+              </div>
+
+              <div class="log-entry" data-type="login">
+                <div class="log-type-icon" style="background:rgba(0,196,140,0.1);">🔑</div>
+                <div class="log-body">
+                  <div class="log-action">LOGIN · jane.smith@hub.ac</div>
+                  <div class="log-detail">Role: Alumni · Device: HUB-PC-003 · IP: 192.168.1.28</div>
+                  <div class="log-meta">
+                    <span class="badge badge-green">Success</span>
+                    <span class="badge badge-gray">Login</span>
+                  </div>
+                </div>
+                <div class="log-right">
+                  <div class="log-time">08:30:02</div>
+                </div>
+              </div>
+
+              <div class="log-entry" data-type="admin">
+                <div class="log-type-icon" style="background:rgba(157,78,221,0.1);">⚡</div>
+                <div class="log-body">
+                  <div class="log-action">SESSION CLOCK-IN · Unified Admin</div>
+                  <div class="log-detail">Device: HUB-PC-004 · Session started · 00:00:00</div>
+                  <div class="log-meta">
+                    <span class="badge badge-blue">Admin</span>
+                    <span class="badge badge-gray">Session Event</span>
+                  </div>
+                </div>
+                <div class="log-right">
+                  <div class="log-time">08:01:55</div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div>
+          <div class="threat-level low" style="margin-bottom:20px;">
+            <div class="threat-level-label">Current Threat Level</div>
+            <div class="threat-level-val" style="color:var(--success);">🟢 LOW</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">All systems nominal</div>
+          </div>
+
+          <div class="card" style="margin-bottom:20px;">
+            <div class="section-header"><div class="section-title-sm">🔒 Undeletable Records</div><span class="badge badge-red">3 Today</span></div>
+            <div class="lock-entry">
+              <div style="font-size:18px;">⛔</div>
+              <div class="lock-action">
+                <div style="font-size:13px;font-weight:600;color:var(--text);">Device Checkout</div>
+                <div class="lock-timestamp">2025-03-20 14:32:21</div>
+              </div>
+            </div>
+            <div class="lock-entry">
+              <div style="font-size:18px;">⛔</div>
+              <div class="lock-action">
+                <div style="font-size:13px;font-weight:600;color:var(--text);">Lockdown Drill</div>
+                <div class="lock-timestamp">2025-03-20 14:28:03</div>
+              </div>
+            </div>
+            <div class="lock-entry">
+              <div style="font-size:18px;">⛔</div>
+              <div class="lock-action">
+                <div style="font-size:13px;font-weight:600;color:var(--text);">Member Login</div>
+                <div class="lock-timestamp">2025-03-20 13:55:09</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="section-title-sm" style="margin-bottom:16px;">⚡ Quick Actions</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+              <button class="btn btn-ghost" style="justify-content:flex-start;gap:10px;">📥 Export Today's Logs</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start;gap:10px;">🖨️ Print Audit Report</button>
+              <button class="btn btn-ghost" style="justify-content:flex-start;gap:10px;">📧 Email to Supervisor</button>
+              <button class="btn btn-danger" style="justify-content:flex-start;gap:10px;">🚨 Initiate Lockdown</button>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:20px;background:rgba(43,127,255,0.04);border-color:rgba(43,127,255,0.2);">
+            <div style="font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-muted);line-height:1.8;">
+              <div>🔐 Logs are SHA-256 signed</div>
+              <div>📋 Retention: 5 years</div>
+              <div>🌐 Off-site backup: Active</div>
+              <div>📡 Last sync: 2 min ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+function setLogFilter(type, el) {
+  document.querySelectorAll('.log-filter').forEach(f => f.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.log-entry').forEach(entry => {
+    if (type === 'all') {
+      entry.style.display = '';
+    } else {
+      const types = (entry.dataset.type || '').split(' ');
+      entry.style.display = types.includes(type) ? '' : 'none';
+    }
+  });
+}
+</script>
+</body>
+</html>

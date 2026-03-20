@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Innovation Hub · Members</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.filter-bar { display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:24px; }
+.filter-chip {
+  padding:7px 16px;border-radius:20px;font-size:13px;font-weight:600;
+  border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);
+  cursor:pointer;transition:all 0.2s;
+}
+.filter-chip.active { background:rgba(43,127,255,0.1);border-color:var(--accent);color:var(--accent); }
+.filter-chip:hover { color:var(--text); }
+
+.member-grid { display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px; }
+.member-card {
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;
+  overflow:hidden;transition:all 0.2s;
+}
+.member-card:hover { border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 32px rgba(43,127,255,0.1); }
+.member-card-top {
+  height:60px;position:relative;
+}
+.member-card-avatar {
+  position:absolute;bottom:-20px;left:20px;
+  width:44px;height:44px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:700;color:#fff;
+  border:3px solid var(--surface);
+}
+.member-card-body { padding:28px 20px 20px; }
+.member-card-name { font-size:16px;font-weight:700;color:var(--text); }
+.member-card-handle { font-size:11px;color:var(--text-muted);font-family:'JetBrains Mono',monospace;margin-top:2px; }
+.member-card-stats { display:flex;gap:16px;margin:14px 0;font-size:12px;color:var(--text-muted);font-family:'JetBrains Mono',monospace; }
+.member-card-stats strong { color:var(--text);font-size:14px;display:block;font-weight:700; }
+.member-card-actions { display:flex;gap:8px;margin-top:16px; }
+
+.members-table-wrap { display:none; }
+.view-grid .member-grid { display:grid; }
+.view-list .member-grid { display:none; }
+.view-list .members-table-wrap { display:block; }
+</style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <div class="sidebar-logo-icon">HUB</div>
+      <span class="sidebar-logo-text">Innovation <span>Hub</span></span>
+    </a>
+    <div class="sidebar-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item"><span class="nav-icon">⚡</span> Dashboard</a>
+    <a href="members.html" class="nav-item active"><span class="nav-icon">👥</span> Members <span class="nav-badge">24</span></a>
+    <a href="devices.html" class="nav-item"><span class="nav-icon">💻</span> Device Registry</a>
+    <a href="projects.html" class="nav-item"><span class="nav-icon">🚀</span> Projects</a>
+    <div class="sidebar-section-label">Admin</div>
+    <a href="security.html" class="nav-item"><span class="nav-icon">🛡️</span> Security Logs</a>
+    <div class="sidebar-footer">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:11px;color:var(--text-muted);">Appearance</span>
+        <button class="theme-toggle" onclick="toggleTheme()"><span class="theme-icon">☀️</span></button>
+      </div>
+      <a href="profile.html" class="user-widget">
+        <div class="user-avatar" style="background:linear-gradient(135deg,var(--accent),var(--accent2));">UA</div>
+        <div class="user-info"><div class="user-name">Unified Admin</div><div class="user-role">root@hub</div></div>
+        <span style="font-size:16px;color:var(--text-muted);">⚙️</span>
+      </a>
+    </div>
+  </aside>
+
+  <div class="page-content">
+    <div class="top-bar">
+      <div class="search-box"><span>🔍</span><input type="text" placeholder="Search members..." oninput="filterMembers(this.value)"></div>
+      <div style="margin-left:auto;display:flex;gap:10px;">
+        <button class="btn btn-ghost btn-icon" onclick="setView('grid')" title="Grid view">⊞</button>
+        <button class="btn btn-ghost btn-icon" onclick="setView('list')" title="List view">☰</button>
+        <button class="btn btn-primary" onclick="document.getElementById('inviteModal').classList.add('open')">+ Invite Member</button>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1 class="page-title animate-in">Hub Members</h1>
+        <p class="page-subtitle animate-in delay-1">24 active members · 3 guests · 2 alumni</p>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <!-- Metrics -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;" class="animate-in">
+        <div class="metric-card metric-accent-blue"><div class="metric-label">Students</div><div class="metric-value">18</div></div>
+        <div class="metric-card metric-accent-purple"><div class="metric-label">Alumni</div><div class="metric-value">4</div></div>
+        <div class="metric-card metric-accent-amber"><div class="metric-label">Guests</div><div class="metric-value">3</div></div>
+        <div class="metric-card metric-accent-green"><div class="metric-label">Admins</div><div class="metric-value">2</div></div>
+      </div>
+
+      <!-- Filter chips -->
+      <div class="filter-bar animate-in delay-1">
+        <span style="font-size:13px;color:var(--text-muted);font-weight:600;">Filter:</span>
+        <div class="filter-chip active" onclick="filterRole('all',this)">All Members</div>
+        <div class="filter-chip" onclick="filterRole('student',this)">🎓 Students</div>
+        <div class="filter-chip" onclick="filterRole('alumni',this)">🏛️ Alumni</div>
+        <div class="filter-chip" onclick="filterRole('guest',this)">🤝 Guests</div>
+        <div class="filter-chip" onclick="filterRole('admin',this)">⚡ Admins</div>
+      </div>
+
+      <!-- GRID VIEW -->
+      <div id="viewContainer" class="view-grid">
+        <div class="member-grid" id="memberGrid">
+
+          <!-- Member 1 -->
+          <div class="member-card" data-role="admin">
+            <div class="member-card-top" style="background:linear-gradient(135deg,var(--accent),var(--accent2));">
+              <div class="member-card-avatar" style="background:linear-gradient(135deg,var(--accent),var(--accent2));">UA</div>
+            </div>
+            <div class="member-card-body">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div><div class="member-card-name">Unified Admin</div><div class="member-card-handle">@unified.admin</div></div>
+                <span class="badge badge-blue">Admin</span>
+              </div>
+              <div class="member-card-stats">
+                <div><strong>2,450</strong>Points</div>
+                <div><strong>47</strong>Sessions</div>
+                <div><strong>8</strong>Projects</div>
+              </div>
+              <div style="margin-bottom:12px;"><span class="pulse-dot green" style="margin-right:6px;"></span><span style="font-size:12px;color:var(--text-muted);">Active now · PC-004</span></div>
+              <div class="member-card-actions">
+                <a href="profile.html" class="btn btn-ghost btn-sm" style="flex:1;justify-content:center;">View Profile</a>
+                <button class="btn btn-ghost btn-sm btn-icon">✉️</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Member 2 -->
+          <div class="member-card" data-role="student">
+            <div class="member-card-top" style="background:linear-gradient(135deg,#10B981,#059669);">
+              <div class="member-card-avatar" style="background:linear-gradient(135deg,#10B981,#059669);">AS</div>
+            </div>
+            <div class="member-card-body">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div><div class="member-card-name">Alex S.</div><div class="member-card-handle">@alex.smith</div></div>
+                <span class="badge badge-green">Student</span>
+              </div>
+              <div class="member-card-stats">
+                <div><strong>2,132</strong>Points</div>
+                <div><strong>38</strong>Sessions</div>
+                <div><strong>5</strong>Projects</div>
+              </div>
+              <div style="margin-bottom:12px;"><span class="pulse-dot green" style="margin-right:6px;"></span><span style="font-size:12px;color:var(--text-muted);">Active now · PC-001</span></div>
+              <div class="member-card-actions">
+                <button class="btn btn-ghost btn-sm" style="flex:1;">View Profile</button>
+                <button class="btn btn-ghost btn-sm btn-icon">✉️</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Member 3 -->
+          <div class="member-card" data-role="alumni">
+            <div class="member-card-top" style="background:linear-gradient(135deg,var(--accent2),#7B2FBE);">
+              <div class="member-card-avatar" style="background:linear-gradient(135deg,var(--accent2),#7B2FBE);">JD</div>
+            </div>
+            <div class="member-card-body">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div><div class="member-card-name">Jane Doe</div><div class="member-card-handle">@jane.doe</div></div>
+                <span class="badge badge-purple">Alumni</span>
+              </div>
+              <div class="member-card-stats">
+                <div><strong>1,876</strong>Points</div>
+                <div><strong>62</strong>Sessions</div>
+                <div><strong>12</strong>Projects</div>
+              </div>
+              <div style="margin-bottom:12px;"><span class="pulse-dot gray" style="margin-right:6px;"></span><span style="font-size:12px;color:var(--text-muted);">Last seen 2h ago</span></div>
+              <div class="member-card-actions">
+                <button class="btn btn-ghost btn-sm" style="flex:1;">View Profile</button>
+                <button class="btn btn-ghost btn-sm btn-icon">✉️</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Member 4 -->
+          <div class="member-card" data-role="student">
+            <div class="member-card-top" style="background:linear-gradient(135deg,#EC4899,#BE185D);">
+              <div class="member-card-avatar" style="background:linear-gradient(135deg,#EC4899,#BE185D);">PK</div>
+            </div>
+            <div class="member-card-body">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div><div class="member-card-name">Priya K.</div><div class="member-card-handle">@priya.k</div></div>
+                <span class="badge badge-green">Student</span>
+              </div>
+              <div class="member-card-stats">
+                <div><strong>1,654</strong>Points</div>
+                <div><strong>29</strong>Sessions</div>
+                <div><strong>3</strong>Projects</div>
+              </div>
+              <div style="margin-bottom:12px;"><span class="pulse-dot green" style="margin-right:6px;"></span><span style="font-size:12px;color:var(--text-muted);">Active now · PC-003</span></div>
+              <div class="member-card-actions">
+                <button class="btn btn-ghost btn-sm" style="flex:1;">View Profile</button>
+                <button class="btn btn-ghost btn-sm btn-icon">✉️</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Member 5 -->
+          <div class="member-card" data-role="guest">
+            <div class="member-card-top" style="background:linear-gradient(135deg,var(--warning),#D97706);">
+              <div class="member-card-avatar" style="background:linear-gradient(135deg,var(--warning),#D97706);">SK</div>
+            </div>
+            <div class="member-card-body">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div><div class="member-card-name">Sarah K.</div><div class="member-card-handle">@guest.2023</div></div>
+                <span class="badge badge-amber">Guest</span>
+              </div>
+              <div class="member-card-stats">
+                <div><strong>320</strong>Points</div>
+                <div><strong>5</strong>Sessions</div>
+                <div><strong>1</strong>Projects</div>
+              </div>
+              <div style="margin-bottom:12px;"><span class="pulse-dot green" style="margin-right:6px;"></span><span style="font-size:12px;color:var(--text-muted);">Active now · PC-002</span></div>
+              <div class="member-card-actions">
+                <button class="btn btn-ghost btn-sm" style="flex:1;">View Profile</button>
+                <button class="btn btn-danger btn-sm">Revoke</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Member 6 -->
+          <div class="member-card" data-role="student">
+            <div class="member-card-top" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">
+              <div class="member-card-avatar" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">MW</div>
+            </div>
+            <div class="member-card-body">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                <div><div class="member-card-name">Marcus W.</div><div class="member-card-handle">@marcus.w</div></div>
+                <span class="badge badge-green">Student</span>
+              </div>
+              <div class="member-card-stats">
+                <div><strong>1,240</strong>Points</div>
+                <div><strong>31</strong>Sessions</div>
+                <div><strong>4</strong>Projects</div>
+              </div>
+              <div style="margin-bottom:12px;"><span class="pulse-dot gray" style="margin-right:6px;"></span><span style="font-size:12px;color:var(--text-muted);">Last seen yesterday</span></div>
+              <div class="member-card-actions">
+                <button class="btn btn-ghost btn-sm" style="flex:1;">View Profile</button>
+                <button class="btn btn-ghost btn-sm btn-icon">✉️</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- List View table (hidden by default) -->
+        <div class="members-table-wrap">
+          <div class="card">
+            <table class="data-table">
+              <thead><tr><th>Member</th><th>Role</th><th>Points</th><th>Sessions</th><th>Status</th><th></th></tr></thead>
+              <tbody>
+                <tr><td><div style="font-weight:600;">Unified Admin</div><div class="mono" style="font-size:11px;color:var(--text-muted);">@unified.admin</div></td><td><span class="badge badge-blue">Admin</span></td><td class="mono" style="color:var(--accent);">2,450</td><td>47</td><td><span style="display:flex;align-items:center;gap:6px;"><span class="pulse-dot green"></span>Active</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+                <tr><td><div style="font-weight:600;">Alex S.</div><div class="mono" style="font-size:11px;color:var(--text-muted);">@alex.smith</div></td><td><span class="badge badge-green">Student</span></td><td class="mono" style="color:var(--accent);">2,132</td><td>38</td><td><span style="display:flex;align-items:center;gap:6px;"><span class="pulse-dot green"></span>Active</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+                <tr><td><div style="font-weight:600;">Jane Doe</div><div class="mono" style="font-size:11px;color:var(--text-muted);">@jane.doe</div></td><td><span class="badge badge-purple">Alumni</span></td><td class="mono" style="color:var(--accent);">1,876</td><td>62</td><td><span style="display:flex;align-items:center;gap:6px;"><span class="pulse-dot gray"></span>Away</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+                <tr><td><div style="font-weight:600;">Priya K.</div><div class="mono" style="font-size:11px;color:var(--text-muted);">@priya.k</div></td><td><span class="badge badge-green">Student</span></td><td class="mono" style="color:var(--accent);">1,654</td><td>29</td><td><span style="display:flex;align-items:center;gap:6px;"><span class="pulse-dot green"></span>Active</span></td><td><button class="btn btn-ghost btn-sm">View</button></td></tr>
+                <tr><td><div style="font-weight:600;">Sarah K.</div><div class="mono" style="font-size:11px;color:var(--text-muted);">@guest.2023</div></td><td><span class="badge badge-amber">Guest</span></td><td class="mono" style="color:var(--accent);">320</td><td>5</td><td><span style="display:flex;align-items:center;gap:6px;"><span class="pulse-dot green"></span>Active</span></td><td><button class="btn btn-danger btn-sm">Revoke</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Invite Modal -->
+<div class="modal-overlay" id="inviteModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">+ Invite Member</div>
+      <button class="modal-close" onclick="document.getElementById('inviteModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input class="form-input" type="email" placeholder="member@university.edu">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Role</label>
+      <select class="form-input">
+        <option>Student</option><option>Alumni</option><option>Guest</option><option>Admin</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Personal Message (optional)</label>
+      <textarea class="form-input" rows="3" placeholder="You're invited to join Innovation Hub!"></textarea>
+    </div>
+    <div style="display:flex;gap:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="document.getElementById('inviteModal').classList.remove('open')">Send Invite</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('inviteModal').classList.remove('open')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+function setView(v) {
+  const c = document.getElementById('viewContainer');
+  c.className = 'view-' + v;
+}
+function filterRole(role, el) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.member-card').forEach(card => {
+    card.style.display = (role === 'all' || card.dataset.role === role) ? '' : 'none';
+  });
+}
+function filterMembers(q) {
+  q = q.toLowerCase();
+  document.querySelectorAll('.member-card').forEach(card => {
+    const name = card.querySelector('.member-card-name').textContent.toLowerCase();
+    card.style.display = name.includes(q) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

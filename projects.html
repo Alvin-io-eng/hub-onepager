@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Innovation Hub · Projects</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.project-card {
+  background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;
+  transition:all 0.2s;display:flex;flex-direction:column;
+}
+.project-card:hover { border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 32px rgba(43,127,255,0.08); }
+.project-header { display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px; }
+.project-name { font-size:18px;font-weight:800;color:var(--text);margin-bottom:6px; }
+.project-desc { font-size:13px;color:var(--text-muted);line-height:1.6;margin-bottom:16px;flex:1; }
+.project-tags { display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px; }
+.project-footer { display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:16px;border-top:1px solid var(--border); }
+.project-contributors { display:flex; }
+.project-contributors .avatar {
+  width:28px;height:28px;border-radius:7px;margin-right:-6px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:#fff;border:2px solid var(--surface);
+}
+.github-link { display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--accent);text-decoration:none;margin-bottom:12px; }
+.github-link:hover { text-decoration:underline; }
+.project-milestone {
+  display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;
+}
+.project-milestone:last-child { border-bottom:none; }
+.milestone-check { width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0; }
+.milestone-done { background:rgba(0,196,140,0.1);color:var(--success); }
+.milestone-pending { background:var(--surface2);color:var(--text-muted);border:1px solid var(--border); }
+</style>
+</head>
+<body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <a href="index.html" class="sidebar-logo"><div class="sidebar-logo-icon">HUB</div><span class="sidebar-logo-text">Innovation <span>Hub</span></span></a>
+    <div class="sidebar-section-label">Main</div>
+    <a href="dashboard.html" class="nav-item"><span class="nav-icon">⚡</span> Dashboard</a>
+    <a href="members.html" class="nav-item"><span class="nav-icon">👥</span> Members</a>
+    <a href="devices.html" class="nav-item"><span class="nav-icon">💻</span> Device Registry</a>
+    <a href="projects.html" class="nav-item active"><span class="nav-icon">🚀</span> Projects</a>
+    <div class="sidebar-section-label">Admin</div>
+    <a href="security.html" class="nav-item"><span class="nav-icon">🛡️</span> Security Logs</a>
+    <div class="sidebar-footer">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:11px;color:var(--text-muted);">Appearance</span>
+        <button class="theme-toggle" onclick="toggleTheme()"><span class="theme-icon">☀️</span></button>
+      </div>
+      <a href="profile.html" class="user-widget">
+        <div class="user-avatar" style="background:linear-gradient(135deg,var(--accent),var(--accent2));">UA</div>
+        <div class="user-info"><div class="user-name">Unified Admin</div><div class="user-role">root@hub</div></div>
+        <span style="font-size:16px;color:var(--text-muted);">⚙️</span>
+      </a>
+    </div>
+  </aside>
+
+  <div class="page-content">
+    <div class="top-bar">
+      <div class="search-box"><span>🔍</span><input type="text" placeholder="Search projects..."></div>
+      <div style="margin-left:auto;display:flex;gap:10px;">
+        <select class="form-input" style="width:auto;padding:8px 14px;font-size:13px;">
+          <option>All Projects</option><option>In Progress</option><option>Completed</option><option>Planning</option>
+        </select>
+        <button class="btn btn-primary" onclick="document.getElementById('newProjectModal').classList.add('open')">+ New Project</button>
+      </div>
+    </div>
+
+    <div class="page-header">
+      <div>
+        <h1 class="page-title animate-in">Innovation Projects</h1>
+        <p class="page-subtitle animate-in delay-1">47 active projects · 12 completed · 8 near deadline</p>
+      </div>
+    </div>
+
+    <div class="page-body">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;" class="animate-in">
+        <div class="metric-card metric-accent-blue"><div class="metric-label">Active</div><div class="metric-value">47</div></div>
+        <div class="metric-card metric-accent-green"><div class="metric-label">Completed</div><div class="metric-value">12</div></div>
+        <div class="metric-card metric-accent-amber"><div class="metric-label">Near Deadline</div><div class="metric-value">8</div></div>
+        <div class="metric-card metric-accent-purple"><div class="metric-label">Total Commits</div><div class="metric-value">247</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;" class="animate-in delay-1">
+
+        <!-- Project 1 -->
+        <div class="project-card">
+          <div class="project-header">
+            <div>
+              <div style="display:flex;gap:6px;margin-bottom:8px;">
+                <span class="badge badge-blue">Research</span>
+                <span class="badge badge-purple">Hardware</span>
+              </div>
+              <div class="project-name">Solar Tracker IoT</div>
+            </div>
+            <span style="font-size:20px;font-weight:800;color:var(--accent);">65%</span>
+          </div>
+          <p class="project-desc">A dual-axis solar tracking system using Arduino and servo motors to maximize solar panel efficiency. Real-time telemetry via MQTT.</p>
+          <a href="#" class="github-link">🐙 github.com/alex/solar-tracker</a>
+          <div class="progress-bar" style="margin-bottom:16px;"><div class="progress-fill" style="width:65%"></div></div>
+          <div style="margin-bottom:16px;">
+            <div class="project-milestone">
+              <div class="milestone-check milestone-done">✓</div>
+              <span style="color:var(--text);">Hardware prototype built</span>
+            </div>
+            <div class="project-milestone">
+              <div class="milestone-check milestone-done">✓</div>
+              <span style="color:var(--text);">Motor control algorithm</span>
+            </div>
+            <div class="project-milestone">
+              <div class="milestone-check milestone-pending">○</div>
+              <span style="color:var(--text-muted);">MQTT integration</span>
+            </div>
+            <div class="project-milestone">
+              <div class="milestone-check milestone-pending">○</div>
+              <span style="color:var(--text-muted);">Field testing</span>
+            </div>
+          </div>
+          <div class="project-footer">
+            <div class="project-contributors">
+              <div class="avatar" style="background:linear-gradient(135deg,#10B981,#059669);">AS</div>
+              <div class="avatar" style="background:linear-gradient(135deg,var(--accent2),#7B2FBE);">JD</div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);">Due Oct 12</div>
+          </div>
+        </div>
+
+        <!-- Project 2 -->
+        <div class="project-card">
+          <div class="project-header">
+            <div>
+              <div style="display:flex;gap:6px;margin-bottom:8px;">
+                <span class="badge badge-green">Dev</span>
+                <span class="badge badge-gray">Web</span>
+              </div>
+              <div class="project-name">Hub Dashboard UI</div>
+            </div>
+            <span style="font-size:20px;font-weight:800;color:var(--success);">90%</span>
+          </div>
+          <p class="project-desc">A comprehensive admin dashboard for the Innovation Hub. Real-time device tracking, member management, and project oversight.</p>
+          <a href="#" class="github-link">🐙 github.com/jessie/hub-ui</a>
+          <div class="progress-bar" style="margin-bottom:16px;"><div class="progress-fill green" style="width:90%"></div></div>
+          <div style="margin-bottom:16px;">
+            <div class="project-milestone"><div class="milestone-check milestone-done">✓</div><span style="color:var(--text);">Design system</span></div>
+            <div class="project-milestone"><div class="milestone-check milestone-done">✓</div><span style="color:var(--text);">Dashboard & auth pages</span></div>
+            <div class="project-milestone"><div class="milestone-check milestone-done">✓</div><span style="color:var(--text);">Device registry</span></div>
+            <div class="project-milestone"><div class="milestone-check milestone-pending">○</div><span style="color:var(--text-muted);">Backend integration</span></div>
+          </div>
+          <div class="project-footer">
+            <div class="project-contributors">
+              <div class="avatar" style="background:linear-gradient(135deg,#EC4899,#BE185D);">JD</div>
+              <div class="avatar" style="background:linear-gradient(135deg,var(--accent),var(--accent2));">UA</div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);">Due Nov 30</div>
+          </div>
+        </div>
+
+        <!-- Project 3 -->
+        <div class="project-card">
+          <div class="project-header">
+            <div>
+              <div style="display:flex;gap:6px;margin-bottom:8px;">
+                <span class="badge badge-amber">Workshop</span>
+              </div>
+              <div class="project-name">Intro to Docker</div>
+            </div>
+            <span style="font-size:20px;font-weight:800;color:var(--warning);">100%</span>
+          </div>
+          <p class="project-desc">A one-time workshop for 12 attendees on containerization with Docker. Hands-on labs, slides, and take-home exercises included.</p>
+          <a href="#" class="github-link">📎 slides.com/guest/docker-workshop</a>
+          <div class="progress-bar" style="margin-bottom:16px;"><div class="progress-fill" style="width:100%;background:var(--success)"></div></div>
+          <div class="alert alert-success" style="margin-bottom:0;"><span>🎉</span><span>Completed · 12 attendees · All satisfied</span></div>
+          <div class="project-footer">
+            <div class="project-contributors">
+              <div class="avatar" style="background:linear-gradient(135deg,var(--warning),#D97706);">SK</div>
+            </div>
+            <span class="badge badge-green">Completed</span>
+          </div>
+        </div>
+
+        <!-- Project 4 -->
+        <div class="project-card">
+          <div class="project-header">
+            <div>
+              <div style="display:flex;gap:6px;margin-bottom:8px;">
+                <span class="badge badge-green">Open Source</span>
+              </div>
+              <div class="project-name">Django Extension</div>
+            </div>
+            <span style="font-size:20px;font-weight:800;color:var(--success);">45%</span>
+          </div>
+          <p class="project-desc">Contributing to a Django REST framework extension with better serialization and authentication hooks. Mentoring 2 junior students.</p>
+          <a href="#" class="github-link">🐙 github.com/sarah/django-ext</a>
+          <div class="progress-bar" style="margin-bottom:16px;"><div class="progress-fill green" style="width:45%"></div></div>
+          <div style="margin-bottom:16px;">
+            <div class="project-milestone"><div class="milestone-check milestone-done">✓</div><span style="color:var(--text);">Fork & setup</span></div>
+            <div class="project-milestone"><div class="milestone-check milestone-done">✓</div><span style="color:var(--text);">Auth hooks</span></div>
+            <div class="project-milestone"><div class="milestone-check milestone-pending">○</div><span style="color:var(--text-muted);">Serializer improvements</span></div>
+            <div class="project-milestone"><div class="milestone-check milestone-pending">○</div><span style="color:var(--text-muted);">PR review & merge</span></div>
+          </div>
+          <div class="project-footer">
+            <div class="project-contributors">
+              <div class="avatar" style="background:linear-gradient(135deg,#10B981,#059669);">JS</div>
+              <div class="avatar" style="background:linear-gradient(135deg,#0EA5E9,#0369A1);">MW</div>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);">Ongoing</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- New Project Modal -->
+<div class="modal-overlay" id="newProjectModal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🚀 New Project</div>
+      <button class="modal-close" onclick="document.getElementById('newProjectModal').classList.remove('open')">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Project Name</label>
+      <input class="form-input" placeholder="e.g. Smart Irrigation System">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description</label>
+      <textarea class="form-input" rows="3" placeholder="What are you building?"></textarea>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Category</label>
+        <select class="form-input"><option>Research</option><option>Dev</option><option>Hardware</option><option>Workshop</option><option>Open Source</option></select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deadline</label>
+        <input class="form-input" type="date">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">GitHub / Proof-of-Work URL</label>
+      <input class="form-input" type="url" placeholder="https://github.com/username/repo">
+    </div>
+    <div style="display:flex;gap:12px;">
+      <button class="btn btn-primary" style="flex:1;" onclick="document.getElementById('newProjectModal').classList.remove('open')">Create Project</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('newProjectModal').classList.remove('open')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+</body>
+</html>

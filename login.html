@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Innovation Hub · Sign In</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.auth-layout { display:flex; min-height:100vh; }
+.auth-left {
+  flex: 1; background: linear-gradient(135deg, #0A0F1E 0%, #141B2B 100%);
+  display:flex; flex-direction:column; justify-content:space-between;
+  padding:48px; position:relative; overflow:hidden;
+}
+[data-theme="light"] .auth-left { background: linear-gradient(135deg, #1a2340 0%, #0A0F1E 100%); }
+.auth-left-grid {
+  position:absolute; inset:0;
+  background-image: linear-gradient(rgba(43,127,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(43,127,255,0.06) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+.auth-left-glow {
+  position:absolute; bottom:-10%; left:50%; transform:translateX(-50%);
+  width:600px; height:300px;
+  background:radial-gradient(ellipse, rgba(43,127,255,0.15) 0%, transparent 70%);
+}
+.auth-left-content { position:relative; z-index:2; }
+.auth-quote {
+  font-size:2.5rem; font-weight:800; color:#fff;
+  line-height:1.15; letter-spacing:-0.03em;
+  margin-top:auto;
+}
+.auth-quote span { color: var(--accent); }
+.auth-quote-sub { font-size:15px; color:rgba(255,255,255,0.5); margin-top:16px; }
+.auth-stat-row { display:flex; gap:32px; margin-top:40px; }
+.auth-stat-val { font-size:2rem; font-weight:800; color:#fff; display:block; }
+.auth-stat-lbl { font-size:12px; color:rgba(255,255,255,0.4); font-family:'JetBrains Mono',monospace; text-transform:uppercase; letter-spacing:0.06em; }
+
+.auth-right {
+  width:480px; background:var(--surface);
+  display:flex; flex-direction:column; justify-content:center;
+  padding:64px 48px; position:relative;
+}
+.auth-right-top { position:absolute; top:24px; right:24px; display:flex; gap:10px; align-items:center; }
+
+.auth-form-title { font-size:28px; font-weight:800; color:var(--text); margin-bottom:8px; }
+.auth-form-sub { font-size:14px; color:var(--text-muted); margin-bottom:36px; }
+.auth-form-sub a { color:var(--accent); text-decoration:none; font-weight:600; }
+.auth-form-sub a:hover { text-decoration:underline; }
+
+.divider-text {
+  display:flex; align-items:center; gap:12px; margin:24px 0;
+  font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono',monospace;
+}
+.divider-text::before,.divider-text::after { content:''; flex:1; height:1px; background:var(--border); }
+
+.social-btn {
+  width:100%; padding:12px; border-radius:10px;
+  border:1px solid var(--border); background:var(--surface2);
+  color:var(--text); font-family:'Syne',sans-serif; font-size:14px; font-weight:600;
+  cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px;
+  transition:all var(--transition); margin-bottom:10px;
+}
+.social-btn:hover { background:var(--surface-hover); border-color:var(--text-muted); }
+
+.pass-wrapper { position:relative; }
+.pass-toggle {
+  position:absolute; right:12px; top:50%; transform:translateY(-50%);
+  background:none; border:none; cursor:pointer; font-size:16px; color:var(--text-muted);
+}
+.forgot-link { float:right; font-size:12px; color:var(--accent); text-decoration:none; margin-bottom:8px; }
+.forgot-link:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+<div class="auth-layout">
+
+  <!-- LEFT PANEL -->
+  <div class="auth-left">
+    <div class="auth-left-grid"></div>
+    <div class="auth-left-glow"></div>
+    <div class="auth-left-content">
+      <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;z-index:2;position:relative;">
+        <div style="width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#fff;">HUB</div>
+        <span style="font-size:18px;font-weight:800;color:#fff;">Innovation <span style="color:var(--accent);">Hub</span></span>
+      </a>
+    </div>
+
+    <div style="position:relative;z-index:2;flex:1;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:0;">
+      <div class="auth-quote">
+        Where great<br>ideas become<br><span>real projects.</span>
+      </div>
+      <div class="auth-quote-sub">A community of builders, makers, and innovators working together.</div>
+      <div class="auth-stat-row">
+        <div>
+          <span class="auth-stat-val">24</span>
+          <span class="auth-stat-lbl">Members</span>
+        </div>
+        <div>
+          <span class="auth-stat-val">12</span>
+          <span class="auth-stat-lbl">Projects</span>
+        </div>
+        <div>
+          <span class="auth-stat-val">18</span>
+          <span class="auth-stat-lbl">Devices</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="auth-right">
+    <div class="auth-right-top">
+      <span style="font-size:13px;color:var(--text-muted);">No account?</span>
+      <a href="signup.html" class="btn btn-ghost btn-sm">Sign Up</a>
+      <button class="theme-toggle" onclick="toggleTheme()"><span class="theme-icon">☀️</span></button>
+    </div>
+
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);margin-bottom:12px;">Welcome Back</div>
+    <h1 class="auth-form-title">Sign in to Hub</h1>
+    <p class="auth-form-sub">Don't have an account? <a href="signup.html">Create one free →</a></p>
+
+    <button class="social-btn">
+      <span>🔑</span> Continue with Google
+    </button>
+    <button class="social-btn">
+      <span>🐙</span> Continue with GitHub
+    </button>
+
+    <div class="divider-text">or sign in with email</div>
+
+    <div class="form-group">
+      <label class="form-label">Email Address</label>
+      <input class="form-input" type="email" placeholder="you@hub.ac">
+    </div>
+    <div class="form-group">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <label class="form-label" style="margin-bottom:0;">Password</label>
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+      <div class="pass-wrapper">
+        <input class="form-input" type="password" id="passInput" placeholder="••••••••">
+        <button class="pass-toggle" onclick="togglePass()">👁</button>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:24px;">
+      <input type="checkbox" id="remember" style="accent-color:var(--accent);width:16px;height:16px;">
+      <label for="remember" style="font-size:13px;color:var(--text-muted);cursor:pointer;">Remember me for 30 days</label>
+    </div>
+
+    <a href="dashboard.html" class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px;">Sign In →</a>
+
+    <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:24px;">
+      Protected by Hub Security · <a href="#" style="color:var(--accent);text-decoration:none;">Privacy Policy</a>
+    </p>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+function togglePass() {
+  const el = document.getElementById('passInput');
+  el.type = el.type === 'password' ? 'text' : 'password';
+}
+</script>
+</body>
+</html>

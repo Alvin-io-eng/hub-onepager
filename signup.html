@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Innovation Hub · Join</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<style>
+.auth-layout { display:flex; min-height:100vh; }
+.auth-left {
+  flex:1; background:linear-gradient(135deg,#0A0F1E,#141B2B);
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:48px;position:relative;overflow:hidden;
+}
+.auth-left-grid {
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(43,127,255,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(43,127,255,0.06) 1px,transparent 1px);
+  background-size:50px 50px;
+}
+.auth-left-glow { position:absolute;bottom:-10%;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(157,78,221,0.2) 0%,transparent 70%); }
+
+.auth-right { width:520px;background:var(--surface);display:flex;flex-direction:column;justify-content:center;padding:48px;overflow-y:auto;position:relative; }
+.auth-right-top { position:absolute;top:24px;right:24px;display:flex;gap:10px;align-items:center; }
+
+.step-indicator { display:flex;gap:8px;margin-bottom:32px; }
+.step { flex:1;height:4px;border-radius:2px;background:var(--border);transition:background 0.3s; }
+.step.active { background:var(--accent); }
+.step.done { background:var(--success); }
+
+.role-grid { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px; }
+.role-card {
+  border:2px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;
+  transition:all 0.2s;text-align:center;background:var(--surface2);
+}
+.role-card:hover { border-color:var(--accent);background:rgba(43,127,255,0.05); }
+.role-card.selected { border-color:var(--accent);background:rgba(43,127,255,0.08); }
+.role-card .role-icon { font-size:28px;display:block;margin-bottom:10px; }
+.role-card .role-name { font-size:14px;font-weight:700;color:var(--text); }
+.role-card .role-desc { font-size:12px;color:var(--text-muted);margin-top:4px; }
+
+.skill-tag {
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 14px;border-radius:20px;font-size:13px;font-weight:600;
+  border:1px solid var(--border);background:var(--surface2);color:var(--text-muted);
+  cursor:pointer;transition:all 0.2s;margin:4px;
+}
+.skill-tag.selected { background:rgba(43,127,255,0.1);border-color:var(--accent);color:var(--accent); }
+.skill-tag:hover { border-color:var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="auth-layout">
+  <!-- LEFT -->
+  <div class="auth-left">
+    <div class="auth-left-grid"></div>
+    <div class="auth-left-glow"></div>
+    <div style="position:relative;z-index:2;">
+      <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none;">
+        <div style="width:40px;height:40px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:#fff;">HUB</div>
+        <span style="font-size:18px;font-weight:800;color:#fff;">Innovation <span style="color:var(--accent);">Hub</span></span>
+      </a>
+    </div>
+
+    <div style="position:relative;z-index:2;">
+      <div style="font-size:2.5rem;font-weight:800;color:#fff;line-height:1.15;letter-spacing:-0.03em;margin-bottom:24px;">
+        Join a community<br>of <span style="color:var(--accent2);">innovators</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="width:40px;height:40px;background:rgba(43,127,255,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">💻</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#fff;">Access shared hardware</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.4);">Check out laptops, Arduinos, and more</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="width:40px;height:40px;background:rgba(157,78,221,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🚀</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#fff;">Ship real projects</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.4);">Document your work and build your portfolio</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;">
+          <div style="width:40px;height:40px;background:rgba(0,196,140,0.15);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🏆</div>
+          <div>
+            <div style="font-size:14px;font-weight:700;color:#fff;">Earn recognition</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.4);">Points for commits, sessions, and milestones</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="auth-right">
+    <div class="auth-right-top">
+      <span style="font-size:13px;color:var(--text-muted);">Have account?</span>
+      <a href="login.html" class="btn btn-ghost btn-sm">Sign In</a>
+      <button class="theme-toggle" onclick="toggleTheme()"><span class="theme-icon">☀️</span></button>
+    </div>
+
+    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent2);margin-bottom:12px;">Step <span id="stepNum">1</span> of 3</div>
+    <h1 style="font-size:26px;font-weight:800;color:var(--text);margin-bottom:24px;">Create your Hub account</h1>
+
+    <div class="step-indicator">
+      <div class="step active" id="step1"></div>
+      <div class="step" id="step2"></div>
+      <div class="step" id="step3"></div>
+    </div>
+
+    <!-- STEP 1: Basic Info -->
+    <div id="panel1">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">First Name</label>
+          <input class="form-input" type="text" placeholder="Alex">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Last Name</label>
+          <input class="form-input" type="text" placeholder="Smith">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input class="form-input" type="email" placeholder="alex@university.edu">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" placeholder="Min. 8 characters">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input class="form-input" type="password" placeholder="Repeat password">
+      </div>
+      <button class="btn btn-primary" style="width:100%;padding:14px;font-size:15px;" onclick="goStep(2)">Continue →</button>
+    </div>
+
+    <!-- STEP 2: Role -->
+    <div id="panel2" style="display:none;">
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px;">Select your role in the innovation hub community.</p>
+      <div class="role-grid">
+        <div class="role-card selected" onclick="selectRole(this)">
+          <span class="role-icon">🎓</span>
+          <div class="role-name">Student</div>
+          <div class="role-desc">Currently enrolled</div>
+        </div>
+        <div class="role-card" onclick="selectRole(this)">
+          <span class="role-icon">🏛️</span>
+          <div class="role-name">Alumni</div>
+          <div class="role-desc">Graduated member</div>
+        </div>
+        <div class="role-card" onclick="selectRole(this)">
+          <span class="role-icon">🤝</span>
+          <div class="role-name">Guest</div>
+          <div class="role-desc">External collaborator</div>
+        </div>
+        <div class="role-card" onclick="selectRole(this)">
+          <span class="role-icon">👨‍🏫</span>
+          <div class="role-name">Faculty</div>
+          <div class="role-desc">Staff / Mentor</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;">
+        <button class="btn btn-ghost" style="flex:1;padding:14px;" onclick="goStep(1)">← Back</button>
+        <button class="btn btn-primary" style="flex:2;padding:14px;" onclick="goStep(3)">Continue →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Skills -->
+    <div id="panel3" style="display:none;">
+      <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px;">What are your skills? Select all that apply.</p>
+      <div style="margin-bottom:24px;">
+        <span class="skill-tag selected" onclick="this.classList.toggle('selected')">⚡ Electronics</span>
+        <span class="skill-tag" onclick="this.classList.toggle('selected')">💻 Programming</span>
+        <span class="skill-tag" onclick="this.classList.toggle('selected')">🎨 UI/UX Design</span>
+        <span class="skill-tag selected" onclick="this.classList.toggle('selected')">🤖 Machine Learning</span>
+        <span class="skill-tag" onclick="this.classList.toggle('selected')">📡 IoT</span>
+        <span class="skill-tag" onclick="this.classList.toggle('selected')">🔧 Embedded Systems</span>
+        <span class="skill-tag" onclick="this.classList.toggle('selected')">🌐 Web Dev</span>
+        <span class="skill-tag" onclick="this.classList.toggle('selected')">📊 Data Science</span>
+        <span class="skill-tag" onclick="this.classList.toggle('selected')">☁️ Cloud / DevOps</span>
+        <span class="skill-tag" onclick="this.classList.toggle('selected')">🔒 Cybersecurity</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">GitHub Profile URL (optional)</label>
+        <input class="form-input" type="url" placeholder="https://github.com/yourusername">
+      </div>
+      <div style="display:flex;gap:12px;">
+        <button class="btn btn-ghost" style="flex:1;padding:14px;" onclick="goStep(2)">← Back</button>
+        <a href="dashboard.html" class="btn btn-primary" style="flex:2;padding:14px;text-align:center;">🚀 Join the Hub!</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="shared.js"></script>
+<script>
+function goStep(n) {
+  document.getElementById('stepNum').textContent = n;
+  [1,2,3].forEach(i => {
+    document.getElementById('panel'+i).style.display = i===n ? '' : 'none';
+    const s = document.getElementById('step'+i);
+    s.className = 'step' + (i < n ? ' done' : i === n ? ' active' : '');
+  });
+}
+function selectRole(el) {
+  document.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+</script>
+</body>
+</html>
